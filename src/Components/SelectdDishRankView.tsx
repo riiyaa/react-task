@@ -79,7 +79,7 @@ const SelectedDishRankView = ({
   };
 
   const containsDuplicatesDishes = () => {
-    const uniqueValues = new Set(selectedDishes.map((dish) => dish.dishName));
+    const uniqueValues = new Set(selectedDishes.map((dish:any) => dish.dishName));
 
     if (uniqueValues.size < selectedDishes.length) {
       return true;
