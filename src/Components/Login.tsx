@@ -17,6 +17,7 @@ import {
   createTheme,
 } from "@mui/material";
 import { LockPersonRounded } from "@mui/icons-material";
+import { useNavigate } from "react-router-dom";
 
 interface StatusType {
   isSelect: boolean;
@@ -38,6 +39,7 @@ function Login() {
     isInValid: false,
     isError: false,
   });
+  const navigate = useNavigate();
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const handleSubmit = (event: any) => {
@@ -63,13 +65,15 @@ function Login() {
               authUser?.password == pass &&
               status.isSelect
             ) {
-              localStorage.setItem("details", JSON.stringify(obj));
+              localStorage.setItem("isAuthenticated", 'true');
+              navigate('/list',{replace:true})
             } else if (
               authUser?.username == uname &&
               authUser?.password == pass &&
               !status.isSelect
             ) {
-              sessionStorage.setItem("details", JSON.stringify(obj));
+              sessionStorage.setItem("isAuthenticated", 'true');
+              navigate('/list',{replace:true})
             }
           } else {
             setSatus((prev: StatusType) => ({ ...prev, isInValid: true }));
