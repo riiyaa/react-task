@@ -1,17 +1,8 @@
-import {
-  Box,
-  Button,
-  Card,
-  CardContent,
-  Checkbox,
-  Grid,
-  Radio,
-  RadioGroup,
-  Typography,
-} from "@mui/material";
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { Box, Button, Grid, Typography } from "@mui/material";
 import { useSnackbar } from "notistack";
 import { useEffect, useState } from "react";
-import { Link, Navigate, useNavigate } from "react-router-dom";
+import { Link, Navigate } from "react-router-dom";
 import SelectedDishRankView from "./SelectdDishRankView";
 import Dish from "./Dish";
 
@@ -21,7 +12,6 @@ function ListView({
   dishScore,
   setDishScore,
 }: any) {
-  const navigate = useNavigate();
   const [dishesInfo, setDishesInfo] = useState([]);
   const [error, setError] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -47,10 +37,10 @@ function ListView({
   const performApiCall = async () => {
     setIsLoading(true);
     try {
-      const res: any = await fetch("assets/json/list.json").then((data:any)=>data.json());
+      const res: any = await fetch("assets/json/list.json").then((data: any) =>
+        data.json()
+      );
       setDishesInfo(res);
-      console.log(res);
-      
       setIsLoading(false);
     } catch (e: any) {
       setIsLoading(false);
@@ -66,15 +56,38 @@ function ListView({
 
   return (
     <>
-      <Box className="result-page-redirect">
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "flex-end",
+          padding: "0.5rem",
+        }}
+      >
         {" "}
-        <Link to="/result">Go to Result Page</Link>
+        <Link
+          style={{
+            textDecoration: "none",
+            color: "white",
+            padding: "10px",
+            background: "#1976d2",
+            borderRadius: "5px",
+          }}
+          to="/result"
+        >
+          Go to Result Page
+        </Link>
       </Box>
       {isUserAuthenticated ? (
-        <Box className="dishes-container">
+        <Box sx={{ padding: "2rem" }}>
           <Grid container spacing={2} sx={{ placeContent: "start" }}>
             <Grid item xs={8}>
-              <Box className="heading-select">
+              <Box
+                sx={{
+                  display: "flex",
+                  justifyContent: "center",
+                  paddingBottom: "1rem",
+                }}
+              >
                 <Typography variant="h6">Select Best Dishes</Typography>
               </Box>
               <Dish
@@ -85,7 +98,16 @@ function ListView({
                 setSelectedDishes={setSelectedDishes}
               />
             </Grid>
-            <Grid item xs={4} className="dishrankview">
+            <Grid
+              item
+              xs={4}
+              sx={{
+                height: "max-content",
+                width: "max-content",
+                display: "flex",
+                alignItems: "center",
+              }}
+            >
               <Box
                 sx={{
                   display: "flex",

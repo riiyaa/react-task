@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
+  Alert,
   Avatar,
   Box,
   Button,
@@ -52,10 +53,6 @@ function Login() {
       .then((users: User[]) => {
         if (uname && pass) {
           setSatus((prev: StatusType) => ({ ...prev, isError: true }));
-          const obj: object = {
-            username: uname,
-            password: pass,
-          };
           const authUser: User | undefined = users.find(
             (user: User) => user.username == uname && user.password == pass
           );
@@ -65,27 +62,40 @@ function Login() {
               authUser?.password == pass &&
               status.isSelect
             ) {
-              localStorage.setItem("isAuthenticated", 'true');
-              navigate('/list',{replace:true})
+              localStorage.setItem("isAuthenticated", "true");
+              navigate("/list", { replace: true });
             } else if (
               authUser?.username == uname &&
               authUser?.password == pass &&
               !status.isSelect
             ) {
-              sessionStorage.setItem("isAuthenticated", 'true');
-              navigate('/list',{replace:true})
+              sessionStorage.setItem("isAuthenticated", "true");
+              navigate("/list", { replace: true });
             }
           } else {
-            setSatus((prev: StatusType) => ({ ...prev, isInValid: true }));
+            setSatus((prev: StatusType) => ({
+              ...prev,
+              isInValid: true,
+              isError: false,
+            }));
           }
         } else {
-          setSatus((prev: StatusType) => ({ ...prev, isError: true }));
+          setSatus((prev: StatusType) => ({
+            ...prev,
+            isError: true,
+            isInValid: false,
+          }));
         }
       })
       .catch((err) => {
         console.log("e", err);
       });
   };
+
+  useEffect(() => {
+    localStorage.clear();
+    sessionStorage.clear();
+  }, []);
 
   const handleClose = () => {
     setSatus((prev: StatusType) => ({ ...prev, isInValid: false }));
@@ -165,10 +175,14 @@ function Login() {
                     autoComplete="email"
                     autoFocus
                     ref={inputRef1}
-                    helperText={status.isError && !inputRef1.current.value && "Username is required"}
+                    helperText={
+                      status.isError &&
+                      !inputRef1.current.value &&
+                      "Username is required"
+                    }
                     error={status.isError && !inputRef1.current.value}
                   />
-                  
+
                   <TextField
                     margin="normal"
                     required
@@ -179,10 +193,13 @@ function Login() {
                     id="password"
                     autoComplete="current-password"
                     error={status.isError && !inputRef2.current.value}
-                    helperText={status.isError && !inputRef2.current.value && "Password is required"}
-
+                    helperText={
+                      status.isError &&
+                      !inputRef2.current.value &&
+                      "Password is required"
+                    }
                   />
-                  
+
                   <FormControlLabel
                     control={
                       <Checkbox
@@ -217,9 +234,17 @@ function Login() {
             anchorOrigin={{ vertical: "top", horizontal: "right" }}
             open={status.isInValid}
             onClose={handleClose}
-            message="Invalid Credentials"
             autoHideDuration={2000}
-          />
+          >
+            <Alert
+              onClose={handleClose}
+              severity="error"
+              variant="filled"
+              sx={{ width: "100%" }}
+            >
+              Invalid Credentials
+            </Alert>
+          </Snackbar>
         </Fade>
       </ThemeProvider>
     </div>

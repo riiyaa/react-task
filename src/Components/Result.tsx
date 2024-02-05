@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useEffect, useState } from "react";
 import { Box, Grid, Typography } from "@mui/material";
 import { Navigate, Link } from "react-router-dom";
@@ -11,7 +12,6 @@ const Result = () => {
 
   useEffect(() => {
     const items = JSON.parse(localStorage.getItem("dishScoreData"));
-    // console.log(items);
     if (items) {
       setPollList(items);
     }
@@ -23,7 +23,7 @@ const Result = () => {
   }, [pollList]);
 
   const selectedDishesTotalScore = () => {
-    let totalScoreMap = pollList.reduce((mapAcc, obj) => {
+    const totalScoreMap = pollList.reduce((mapAcc: any, obj: any) => {
       if (!mapAcc[obj.name]) {
         mapAcc[obj.name] = obj.score;
       } else {
@@ -36,8 +36,8 @@ const Result = () => {
     totalScoreList(totalScoreMap);
   };
 
-  const totalScoreList = (data:any) => {
-    let tempArray:any[] = [];
+  const totalScoreList = (data: any) => {
+    let tempArray: any = [];
 
     Object.keys(data).forEach((key) =>
       tempArray.push({
@@ -45,30 +45,36 @@ const Result = () => {
         score: data[key],
       })
     );
-    tempArray = tempArray.sort((a, b) => b.score - a.score);
-    setListToDisplay(() => [...tempArray]);
+    tempArray = tempArray.sort((a: any, b: any) => b.score - a.score);
+    setListToDisplay([...tempArray]);
   };
 
-  let table = (
+  const table = (
     <Grid container spacing={2} padding={"1rem"}>
-      <Grid item xs={12}>
-        <Box sx={{
-          display: 'flex',
-          placeContent: 'center',
-          padding: '1rem'
-        }}>
-          <Typography sx={{
-            color: 'blue',
-            border: 'solid',
-            borderColor: 'yellowgreen',
-            background: 'bisque',
-            padding: '0.5rem',
-          }} variant="h6">
+      <Grid item xs={12} sm={6} m={3}>
+        <Box
+          sx={{
+            display: "flex",
+            placeContent: "center",
+            padding: "1rem",
+          }}
+        >
+          <Typography
+            sx={{
+              color: "#1976d2",
+              border: "solid",
+              borderColor: "#1976d2",
+              background: "transparent",
+              borderRadius: "10px",
+              padding: "0.5rem",
+            }}
+            variant="h6"
+          >
             Dish Poll Results
           </Typography>
         </Box>
         <GenerateTableFromData
-          backgroundColor='pery'
+          backgroundColor="#1976d2"
           listToDisplay={listToDisplay}
         />{" "}
       </Grid>
@@ -77,14 +83,39 @@ const Result = () => {
 
   return (
     <>
-      <Box sx={{
-        display: 'flex',
-        justifyContent: 'flex-end',
-        paddingRight: '0.5rem',
-        paddingTop: '0.5rem',
-      }}>
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "space-between",
+          paddingRight: "0.5rem",
+          paddingTop: "0.5rem",
+        }}
+      >
         {" "}
-        <Link to="/list">Go to Poll Page</Link>
+        <Link
+          style={{
+            textDecoration: "none",
+            color: "white",
+            padding: "10px",
+            background: "#1976d2",
+            borderRadius: "5px",
+          }}
+          to="/list"
+        >
+          Go to Poll Page
+        </Link>
+        <Link
+          style={{
+            textDecoration: "none",
+            color: "white",
+            padding: "10px",
+            background: "#1976d2",
+            borderRadius: "5px",
+          }}
+          to="/login"
+        >
+          Logout
+        </Link>
       </Box>
       {isUserAuthenticated ? table : <Navigate replace to="/" />}
     </>
